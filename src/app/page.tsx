@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import type { CSSProperties } from "react";
+import { useEffect } from "react";
 
 const projectInfo = {
   name: "Corrupción en el Sistema de Salud y Vulneración al Derecho a la Vida",
@@ -136,25 +140,58 @@ const suggestions = [
   },
 ];
 
+const changeRoute = [
+  {
+    label: "Observar",
+    text: "Identificar cómo se manifiesta la corrupción en el acceso a medicamentos, atención y recursos.",
+  },
+  {
+    label: "Comprender",
+    text: "Analizar causas, consecuencias y actores involucrados en el sistema de salud.",
+  },
+  {
+    label: "Proponer",
+    text: "Plantear acciones de transparencia, ética y participación ciudadana.",
+  },
+  {
+    label: "Transformar",
+    text: "Promover una cultura donde la salud sea vista como derecho humano fundamental.",
+  },
+];
+
 function SectionHeader({
   eyebrow,
   title,
   children,
+  inverted = false,
 }: {
   eyebrow: string;
   title: string;
   children?: React.ReactNode;
+  inverted?: boolean;
 }) {
   return (
     <div className="mx-auto mb-10 max-w-3xl text-center">
-      <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
+      <p
+        className={`text-sm font-semibold uppercase tracking-[0.18em] ${
+          inverted ? "text-amber-300" : "text-emerald-700"
+        }`}
+      >
         {eyebrow}
       </p>
-      <h2 className="mt-3 text-3xl font-bold text-slate-950 sm:text-4xl">
+      <h2
+        className={`mt-3 text-3xl font-bold sm:text-4xl ${
+          inverted ? "text-white" : "text-slate-950"
+        }`}
+      >
         {title}
       </h2>
       {children ? (
-        <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+        <p
+          className={`mt-4 text-base leading-7 sm:text-lg ${
+            inverted ? "text-emerald-50" : "text-slate-600"
+          }`}
+        >
           {children}
         </p>
       ) : null}
@@ -163,8 +200,44 @@ function SectionHeader({
 }
 
 export default function Home() {
+  useEffect(() => {
+    const revealItems = document.querySelectorAll("[data-reveal]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.14 },
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+
+    const updateProgress = () => {
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+      document.documentElement.style.setProperty(
+        "--scroll-progress",
+        progress.toString(),
+      );
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", updateProgress);
+    };
+  }, []);
+
   return (
     <main className="min-h-screen bg-[#f7faf8] text-slate-900">
+      <div className="fixed left-0 top-0 z-[60] h-1 w-full origin-left scale-x-[var(--scroll-progress)] bg-emerald-600" />
       <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/92 backdrop-blur">
         <nav className="mx-auto max-w-7xl px-5 py-4 lg:px-8">
           <div className="flex items-center justify-between gap-4">
@@ -236,30 +309,30 @@ export default function Home() {
           fill
           priority
           sizes="100vw"
-          className="object-cover object-[58%_center] md:object-center"
+          className="hero-photo object-cover object-[58%_center] md:object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/94 via-slate-950/68 to-slate-950/18" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/70 to-transparent" />
         <div className="relative mx-auto flex min-h-[calc(100svh-260px)] max-w-7xl flex-col justify-center">
-          <p className="mb-5 w-fit border border-white/30 bg-white/12 px-4 py-2 text-sm font-semibold uppercase tracking-[0.16em] backdrop-blur">
+          <p className="mb-5 w-fit border border-white/30 bg-white/12 px-4 py-2 text-sm font-semibold uppercase tracking-[0.16em] backdrop-blur" data-reveal>
             {projectInfo.school}
           </p>
-          <h1 className="max-w-5xl text-4xl font-black leading-tight sm:text-6xl lg:text-7xl">
+          <h1 className="max-w-5xl text-4xl font-black leading-tight sm:text-6xl lg:text-7xl" data-reveal style={{ "--reveal-delay": "110ms" } as CSSProperties}>
             {projectInfo.name}
           </h1>
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-100">
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-100" data-reveal style={{ "--reveal-delay": "220ms" } as CSSProperties}>
             Proyecto de Nación elaborado por seminaristas de {projectInfo.career}, orientado a analizar cómo la corrupción afecta la salud pública y vulnera el derecho a la vida en Guatemala.
           </p>
-          <div className="mt-8 grid max-w-4xl gap-3 text-sm font-semibold sm:grid-cols-3">
-            <div className="border border-white/20 bg-white/12 p-4 backdrop-blur">
+          <div className="mt-8 grid max-w-4xl gap-3 text-sm font-semibold sm:grid-cols-3" data-reveal style={{ "--reveal-delay": "330ms" } as CSSProperties}>
+            <div className="interactive-card border border-white/20 bg-white/12 p-4 backdrop-blur">
               <span className="block text-slate-300">Comunidad</span>
               {projectInfo.community}
             </div>
-            <div className="border border-white/20 bg-white/12 p-4 backdrop-blur">
+            <div className="interactive-card border border-white/20 bg-white/12 p-4 backdrop-blur">
               <span className="block text-slate-300">Asesora</span>
               {projectInfo.advisor}
             </div>
-            <div className="border border-white/20 bg-white/12 p-4 backdrop-blur">
+            <div className="interactive-card border border-white/20 bg-white/12 p-4 backdrop-blur">
               <span className="block text-slate-300">Fecha</span>
               {projectInfo.date}
             </div>
@@ -267,14 +340,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-b border-slate-200 bg-white px-5 py-6 lg:px-8">
+      <section className="border-b border-slate-200 bg-white px-5 py-6 lg:px-8" data-reveal>
         <div className="mx-auto grid max-w-7xl gap-4 text-center sm:grid-cols-3">
           {[
             ["10", "Seminaristas"],
             ["3", "Metas principales"],
             ["7", "Secciones evaluables"],
           ].map(([value, label]) => (
-            <div key={label} className="border border-slate-200 bg-slate-50 px-5 py-4">
+            <div key={label} className="interactive-card shine-surface border border-slate-200 bg-slate-50 px-5 py-4">
               <p className="text-3xl font-black text-emerald-800">{value}</p>
               <p className="mt-1 text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">
                 {label}
@@ -286,7 +359,7 @@ export default function Home() {
 
       <section className="bg-white px-5 py-14 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-[0.7fr_1.3fr]">
-          <div>
+          <div data-reveal="left">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
               Autores
             </p>
@@ -294,9 +367,13 @@ export default function Home() {
               Integrantes del grupo
             </h2>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {projectInfo.members.map((member) => (
-            <p key={member} className="border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-slate-800 transition hover:border-emerald-200 hover:bg-emerald-50">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-reveal="right">
+            {projectInfo.members.map((member, index) => (
+              <p
+                key={member}
+                className="interactive-card border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-slate-800"
+                style={{ "--reveal-delay": `${index * 35}ms` } as CSSProperties}
+              >
                 {member}
               </p>
             ))}
@@ -304,15 +381,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="introduccion" className="px-5 py-20 lg:px-8">
+      <section id="introduccion" className="px-5 py-20 lg:px-8" data-reveal>
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <SectionHeader eyebrow="01" title="Introducción">
               El sistema de salud en Guatemala enfrenta problemas que afectan a la población, especialmente cuando la corrupción impide que los recursos lleguen a quienes más los necesitan.
             </SectionHeader>
           </div>
-          <div className="space-y-6">
-          <article className="border border-slate-200 bg-white p-7 shadow-sm">
+          <div className="space-y-6" data-reveal="right">
+            <article className="interactive-card border border-slate-200 bg-white p-7 shadow-sm">
               <h3 className="text-2xl font-bold text-slate-950">
                 Problema central
               </h3>
@@ -320,7 +397,7 @@ export default function Home() {
                 La corrupción provoca que muchos recursos no sean utilizados correctamente y que las personas no reciban la atención médica que necesitan. Esto se refleja en la falta de medicamentos, mala atención en hospitales y centros de salud, y dificultades para acceder a tratamientos.
               </p>
             </article>
-            <article className="border border-slate-200 bg-white p-7 shadow-sm">
+            <article className="interactive-card border border-slate-200 bg-white p-7 shadow-sm">
               <h3 className="text-2xl font-bold text-slate-950">
                 Justificación
               </h3>
@@ -332,12 +409,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="objetivos" className="bg-white px-5 py-20 lg:px-8">
+      <section id="objetivos" className="bg-white px-5 py-20 lg:px-8" data-reveal>
         <SectionHeader eyebrow="02" title="Objetivos">
           La investigación organiza sus acciones alrededor de un objetivo general y dos objetivos específicos relacionados con la transparencia, la salud y la vida.
         </SectionHeader>
         <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <article className="bg-emerald-800 p-8 text-white shadow-xl">
+          <article className="interactive-card shine-surface bg-emerald-800 p-8 text-white shadow-xl">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-100">
               Objetivo general
             </p>
@@ -347,7 +424,7 @@ export default function Home() {
           </article>
           <div className="grid gap-4">
             {objectives.map((objective, index) => (
-              <div key={objective} className="border border-slate-200 border-l-sky-700 border-l-4 bg-slate-50 p-6">
+              <div key={objective} className="interactive-card border border-slate-200 border-l-sky-700 border-l-4 bg-slate-50 p-6">
                 <p className="text-sm font-bold uppercase tracking-[0.14em] text-sky-800">
                   Objetivo específico {index + 1}
                 </p>
@@ -360,9 +437,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-slate-950 px-5 py-20 text-white lg:px-8">
+      <section className="relative overflow-hidden bg-slate-950 px-5 py-20 text-white lg:px-8" data-reveal>
+        <div className="float-soft absolute right-8 top-8 hidden h-24 w-24 border border-emerald-300/20 lg:block" />
+        <div className="float-soft absolute bottom-10 left-10 hidden h-16 w-16 border border-amber-300/20 lg:block" style={{ animationDelay: "1.2s" }} />
         <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-2">
-          <article className="border border-white/15 p-8">
+          <article className="interactive-card border border-white/15 p-8">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-300">
               Visión
             </p>
@@ -373,7 +452,7 @@ export default function Home() {
               Se aspira a una nación libre de corrupción en el sistema de salud, donde se priorice el derecho a la vida, las personas reciban atención médica digna y los centros de salud cuenten con equipo e insumos necesarios.
             </p>
           </article>
-          <article className="border border-white/15 p-8">
+          <article className="interactive-card border border-white/15 p-8">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-300">
               Misión
             </p>
@@ -387,13 +466,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="plan" className="px-5 py-20 lg:px-8">
+      <section id="plan" className="px-5 py-20 lg:px-8" data-reveal>
         <SectionHeader eyebrow="03" title="Plan de acción">
           El plan resume metas, acciones, recursos y lugares donde podrían ejecutarse las propuestas planteadas por el grupo.
         </SectionHeader>
         <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-3">
           {actionPlan.map((item, index) => (
-            <article key={item.meta} className="border border-slate-200 bg-white p-7 shadow-sm">
+            <article key={item.meta} className="interactive-card border border-slate-200 bg-white p-7 shadow-sm">
               <span className="text-4xl font-black text-emerald-700">
                 {String(index + 1).padStart(2, "0")}
               </span>
@@ -420,13 +499,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="metas" className="bg-white px-5 py-20 lg:px-8">
+      <section id="metas" className="bg-white px-5 py-20 lg:px-8" data-reveal>
         <SectionHeader eyebrow="04" title="Metas">
           Las metas plantean resultados alcanzables en corto, mediano y largo plazo para enfrentar la corrupción en el sistema de salud.
         </SectionHeader>
         <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-3">
           {goals.map((goal) => (
-            <article key={goal.period} className="border border-slate-200 border-t-emerald-700 border-t-4 bg-slate-50 p-7">
+            <article key={goal.period} className="interactive-card border border-slate-200 border-t-emerald-700 border-t-4 bg-slate-50 p-7">
               <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-800">
                 {goal.period}
               </p>
@@ -442,26 +521,50 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="px-5 py-20 lg:px-8">
+      <section className="overflow-hidden bg-emerald-900 px-5 py-20 text-white lg:px-8" data-reveal>
+        <SectionHeader eyebrow="Especial" title="Ruta del cambio" inverted>
+          Una lectura visual del proceso que propone el proyecto: pasar de reconocer el problema a imaginar soluciones posibles para Guatemala.
+        </SectionHeader>
+        <div className="mx-auto grid max-w-7xl gap-5 md:grid-cols-4">
+          {changeRoute.map((item, index) => (
+            <article
+              key={item.label}
+              className="interactive-card relative border border-white/15 bg-white/10 p-6 backdrop-blur"
+              style={{ "--reveal-delay": `${index * 80}ms` } as CSSProperties}
+            >
+              <div className="pulse-soft mb-8 flex h-12 w-12 items-center justify-center rounded-full bg-amber-300 font-black text-slate-950">
+                {index + 1}
+              </div>
+              <h3 className="text-2xl font-bold">{item.label}</h3>
+              <p className="mt-4 leading-7 text-emerald-50">{item.text}</p>
+              {index < changeRoute.length - 1 ? (
+                <div className="absolute -right-4 top-12 hidden h-0.5 w-8 bg-amber-300 md:block" />
+              ) : null}
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="px-5 py-20 lg:px-8" data-reveal>
         <SectionHeader eyebrow="05" title="Marco conceptual">
           Conceptos principales que ayudan a comprender el problema investigado y su relación con la ciudadanía.
         </SectionHeader>
         <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {concepts.map((concept) => (
-            <div key={concept} className="bg-slate-950 px-6 py-5 text-lg font-bold text-white shadow-sm">
+            <div key={concept} className="interactive-card shine-surface bg-slate-950 px-6 py-5 text-lg font-bold text-white shadow-sm">
               {concept}
             </div>
           ))}
         </div>
       </section>
 
-      <section id="valores" className="bg-white px-5 py-20 lg:px-8">
+      <section id="valores" className="bg-white px-5 py-20 lg:px-8" data-reveal>
         <SectionHeader eyebrow="06" title="Valores ciudadanos">
           Valores que promueve el proyecto para construir una sociedad más justa, honesta y comprometida.
         </SectionHeader>
         <div className="mx-auto grid max-w-7xl gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {values.map((value) => (
-            <article key={value.title} className="border border-slate-200 border-t-emerald-700 border-t-4 bg-slate-50 p-6">
+            <article key={value.title} className="interactive-card border border-slate-200 border-t-emerald-700 border-t-4 bg-slate-50 p-6">
               <h3 className="text-xl font-bold text-slate-950">
                 {value.title}
               </h3>
@@ -473,9 +576,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="sugerencias" className="px-5 py-20 lg:px-8">
+      <section id="sugerencias" className="px-5 py-20 lg:px-8" data-reveal>
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-          <article className="bg-slate-950 p-8 text-white">
+          <article className="interactive-card bg-slate-950 p-8 text-white">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-300">
               Reflexiones
             </p>
@@ -489,7 +592,7 @@ export default function Home() {
               El grupo agradece el acompañamiento de la asesora Waleska Martínez y expresa el deseo de que Guatemala pueda avanzar hacia un sistema más justo y humano.
             </p>
           </article>
-          <article className="bg-white p-8 shadow-sm">
+          <article className="interactive-card bg-white p-8 shadow-sm">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
               Sugerencias
             </p>
@@ -498,7 +601,7 @@ export default function Home() {
             </h2>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {suggestions.map((item) => (
-                <div key={item.audience} className="border border-slate-200 p-4">
+                <div key={item.audience} className="interactive-card border border-slate-200 p-4">
                   <h3 className="font-bold text-slate-950">{item.audience}</h3>
                   <p className="mt-2 text-sm leading-7 text-slate-600">
                     {item.text}
@@ -510,12 +613,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="galeria" className="bg-white px-5 py-20 lg:px-8">
+      <section id="galeria" className="bg-white px-5 py-20 lg:px-8" data-reveal>
         <SectionHeader eyebrow="07" title="Galería multimedia">
           Recursos visuales para reforzar la presentación del Proyecto de Nación.
         </SectionHeader>
         <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[1.35fr_0.65fr]">
-          <figure className="overflow-hidden bg-slate-100 shadow-sm">
+          <figure className="interactive-card overflow-hidden bg-slate-100 shadow-sm">
             <Image
               src="/img/proyectonacion.jpeg"
               alt="Grupo de seminaristas del Centro Educativo Integral Cristiano"
@@ -529,7 +632,7 @@ export default function Home() {
           </figure>
           <div className="grid gap-5">
             {["Infografía del proyecto", "Gráfica de apoyo", "Materiales y recursos"].map((item) => (
-              <figure key={item} className="bg-slate-100 shadow-sm">
+              <figure key={item} className="interactive-card bg-slate-100 shadow-sm">
                 <div className="flex aspect-[4/3] items-center justify-center bg-slate-200 p-6 text-center">
                   <span className="text-lg font-bold text-slate-700">
                     {item}
