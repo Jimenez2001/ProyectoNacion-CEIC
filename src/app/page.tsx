@@ -283,12 +283,6 @@ export default function Home() {
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <a
-                href="#sugerencias"
-                className="hidden bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-800 sm:inline-flex"
-              >
-                Sugerencias
-              </a>
               <details className="group relative lg:hidden">
                 <summary className="flex h-11 w-11 cursor-pointer list-none items-center justify-center border border-slate-300 bg-white text-slate-950 transition hover:border-emerald-700 hover:text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 [&::-webkit-details-marker]:hidden">
                   <span className="sr-only">Abrir menú</span>
@@ -312,12 +306,6 @@ export default function Home() {
                         {label}
                       </a>
                     ))}
-                    <a
-                      href="#sugerencias"
-                      className="mt-2 block bg-emerald-700 px-4 py-3 text-base font-bold text-white transition hover:bg-emerald-800 sm:hidden"
-                    >
-                      Sugerencias
-                    </a>
                   </div>
                 </div>
               </details>
