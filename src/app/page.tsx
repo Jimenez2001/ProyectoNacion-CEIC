@@ -13,16 +13,19 @@ const projectInfo = {
   community: "Comunidad No. 16",
   date: "Guatemala, mayo de 2026",
   members: [
-    "Joel Fernando Contreras Cabrera",
-    "Astrid Marielos Cerón Duarte",
-    "Deredic José Luis Erfidio Martínez Córdova",
-    "Hillary Dayanara Pérez Vásquez",
-    "Jeisy Regina Hernández Herrera",
-    "Doris Maybelí Martínez Ortiz",
-    "Juan Julio Chacón Castellanos",
-    "Mariana Castañeda Villanueva",
-    "Raúl Alexander Ochaeta Orantes",
-    "Marvin Marino Veliz Cárcamo",
+    { name: "Joel Fernando Contreras Cabrera", instagram: "joel__contr" },
+    { name: "Astrid Marielos Cerón Duarte", instagram: "astrid_ceron09" },
+    {
+      name: "Deredic José Luis Erfidio Martínez Córdova",
+      instagram: "dmm__mc",
+    },
+    { name: "Hillary Dayanara Pérez Vásquez", instagram: "hillaryy_pv" },
+    { name: "Jeisy Regina Hernández Herrera", instagram: "jjey.h" },
+    { name: "Doris Maybelí Martínez Ortiz", instagram: "maybeli.mx" },
+    { name: "Juan Julio Chacón Castellanos", instagram: "_jrchacon" },
+    { name: "Mariana Castañeda Villanueva", instagram: "marianacastanedav" },
+    { name: "Raúl Alexander Ochaeta Orantes", instagram: "r_ochaetarm" },
+    { name: "Marvin Marino Veliz Cárcamo" },
   ],
 };
 
@@ -113,12 +116,36 @@ const values = [
 ];
 
 const concepts = [
-  "Corrupción",
-  "Sistema de salud",
-  "Derecho a la vida",
-  "Servicio público",
-  "Ética profesional",
-  "Participación ciudadana",
+  {
+    title: "Corrupción",
+    definition:
+      "Fenómeno que toma recursos colectivos para beneficiar intereses particulares, debilita la confianza en las instituciones y afecta con mayor fuerza a quienes menos tienen.",
+  },
+  {
+    title: "Sistema de salud",
+    definition:
+      "Organización de instituciones, servicios y personas encargadas de proteger y mejorar la salud de la población mediante hospitales, centros de salud, personal médico y programas de prevención.",
+  },
+  {
+    title: "Derecho a la vida",
+    definition:
+      "Derecho fundamental reconocido por la Constitución de Guatemala, que obliga al Estado a proteger la vida, la seguridad, la integridad física y los derechos esenciales de cada persona.",
+  },
+  {
+    title: "Servicio público",
+    definition:
+      "Servicio que debe satisfacer necesidades básicas de la población, como salud, educación, seguridad, agua y energía, garantizando acceso eficiente, continuo e igualitario.",
+  },
+  {
+    title: "Ética profesional",
+    definition:
+      "Conjunto de principios, valores y normas que orientan a los profesionales para actuar con responsabilidad, honestidad, respeto y buen servicio hacia la sociedad.",
+  },
+  {
+    title: "Participación ciudadana",
+    definition:
+      "Acción de la población para supervisar, exigir rendición de cuentas y contribuir a decisiones públicas que protejan el bien común y reduzcan prácticas corruptas.",
+  },
 ];
 
 const suggestions = [
@@ -369,13 +396,62 @@ export default function Home() {
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-reveal="right">
             {projectInfo.members.map((member, index) => (
-              <p
-                key={member}
-                className="interactive-card border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-slate-800"
+              <div
+                key={member.name}
+                className="interactive-card group/member relative flex min-h-36 flex-col overflow-hidden border border-slate-200 bg-white p-4 text-slate-800"
                 style={{ "--reveal-delay": `${index * 35}ms` } as CSSProperties}
               >
-                {member}
-              </p>
+                <div className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/45 to-transparent" />
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-950 text-sm font-black text-white transition group-hover/member:bg-emerald-700">
+                    {member.name
+                      .split(" ")
+                      .slice(0, 2)
+                      .map((part) => part[0])
+                      .join("")}
+                  </div>
+                  <div>
+                    <p className="font-bold leading-6 text-slate-950">
+                      {member.name}
+                    </p>
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+                      Seminarista
+                    </p>
+                  </div>
+                </div>
+                {member.instagram ? (
+                  <a
+                    href={`https://www.instagram.com/${member.instagram}/`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group/ig mt-auto inline-flex w-full items-center justify-between gap-3 rounded-full border border-pink-200 bg-gradient-to-r from-pink-50 via-white to-amber-50 px-4 py-2.5 text-sm font-bold text-pink-700 transition hover:-translate-y-0.5 hover:border-pink-400 hover:shadow-lg hover:shadow-pink-900/10"
+                    aria-label={`Abrir Instagram de ${member.name}`}
+                  >
+                    <span className="inline-flex min-w-0 items-center gap-2">
+                      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-600 via-pink-500 to-amber-400 text-white shadow-sm">
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4 fill-none stroke-current stroke-2"
+                        >
+                          <rect x="3" y="3" width="18" height="18" rx="5" />
+                          <circle cx="12" cy="12" r="4" />
+                          <circle
+                            cx="17.5"
+                            cy="6.5"
+                            r="1"
+                            className="fill-current stroke-0"
+                          />
+                        </svg>
+                      </span>
+                      <span className="truncate">@{member.instagram}</span>
+                    </span>
+                    <span className="text-pink-400 transition group-hover/ig:translate-x-1">
+                      →
+                    </span>
+                  </a>
+                ) : null}
+              </div>
             ))}
           </div>
         </div>
@@ -551,9 +627,24 @@ export default function Home() {
         </SectionHeader>
         <div className="mx-auto grid max-w-7xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {concepts.map((concept) => (
-            <div key={concept} className="interactive-card shine-surface bg-slate-950 px-6 py-5 text-lg font-bold text-white shadow-sm">
-              {concept}
-            </div>
+            <article
+              key={concept.title}
+              tabIndex={0}
+              className="group interactive-card shine-surface min-h-44 cursor-pointer border border-slate-800 bg-slate-950 px-6 py-5 text-white shadow-sm outline-none focus:border-emerald-400"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <h3 className="text-lg font-bold">{concept.title}</h3>
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/20 text-lg font-bold text-emerald-300 transition group-hover:rotate-45 group-hover:border-amber-300 group-hover:text-amber-300 group-focus:rotate-45 group-focus:border-amber-300 group-focus:text-amber-300">
+                  +
+                </span>
+              </div>
+              <p className="mt-5 max-h-0 overflow-hidden text-sm leading-7 text-slate-200 opacity-0 transition-all duration-300 group-hover:max-h-48 group-hover:opacity-100 group-focus:max-h-48 group-focus:opacity-100">
+                {concept.definition}
+              </p>
+              <p className="mt-5 text-sm font-semibold text-emerald-300 transition group-hover:text-amber-300 group-focus:text-amber-300">
+                Pasa el mouse o toca para leer
+              </p>
+            </article>
           ))}
         </div>
       </section>
@@ -617,7 +708,7 @@ export default function Home() {
         <SectionHeader eyebrow="07" title="Galería multimedia">
           Recursos visuales para reforzar la presentación del Proyecto de Nación.
         </SectionHeader>
-        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-[1.35fr_0.65fr]">
+        <div className="mx-auto max-w-5xl">
           <figure className="interactive-card overflow-hidden bg-slate-100 shadow-sm">
             <Image
               src="/img/proyectonacion.jpeg"
@@ -630,20 +721,6 @@ export default function Home() {
               Fotografía del grupo de seminaristas
             </figcaption>
           </figure>
-          <div className="grid gap-5">
-            {["Infografía del proyecto", "Gráfica de apoyo", "Materiales y recursos"].map((item) => (
-              <figure key={item} className="interactive-card bg-slate-100 shadow-sm">
-                <div className="flex aspect-[4/3] items-center justify-center bg-slate-200 p-6 text-center">
-                  <span className="text-lg font-bold text-slate-700">
-                    {item}
-                  </span>
-                </div>
-                <figcaption className="bg-white p-4 font-semibold text-slate-800">
-                  Espacio disponible
-                </figcaption>
-              </figure>
-            ))}
-          </div>
         </div>
       </section>
 
